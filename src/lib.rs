@@ -22,18 +22,18 @@
 
 pub mod error;
 pub mod instinct;
-pub mod survival;
-pub mod territory;
-pub mod social;
-pub mod swarm;
-pub mod pack;
 pub mod lifecycle;
+pub mod pack;
+pub mod social;
+pub mod survival;
+pub mod swarm;
+pub mod territory;
 
 #[cfg(feature = "logging")]
 pub mod logging;
 
 pub use error::{JantuError, Result};
-pub use instinct::{Instinct, InstinctType, DriveLevel};
+pub use instinct::{DriveLevel, Instinct, InstinctType};
+pub use social::{HierarchyPosition, SocialRole};
 pub use survival::{SurvivalState, ThreatResponse};
-pub use social::{SocialRole, HierarchyPosition};
 pub use swarm::SwarmBehavior;

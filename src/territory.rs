@@ -15,8 +15,11 @@ impl TerritoryMark {
     }
 
     /// Is this mark still detectable?
-    #[must_use] #[inline]
-    pub fn is_active(&self) -> bool { self.strength > 0.05 }
+    #[must_use]
+    #[inline]
+    pub fn is_active(&self) -> bool {
+        self.strength > 0.05
+    }
 }
 
 /// Territorial response when encountering another's territory.
@@ -32,22 +35,48 @@ mod tests {
     use super::*;
 
     #[test]
+    fn serde_roundtrip_territory_mark() {
+        let m = TerritoryMark {
+            position: [1.0, 2.0, 3.0],
+            strength: 0.8,
+            owner_id: 42,
+        };
+        let json = serde_json::to_string(&m).unwrap();
+        let m2: TerritoryMark = serde_json::from_str(&json).unwrap();
+        assert_eq!(m.position, m2.position);
+        assert!((m.strength - m2.strength).abs() < f32::EPSILON);
+        assert_eq!(m.owner_id, m2.owner_id);
+    }
+
+    #[test]
     fn mark_decays() {
-        let mut m = TerritoryMark { position: [0.0; 3], strength: 1.0, owner_id: 1 };
+        let mut m = TerritoryMark {
+            position: [0.0; 3],
+            strength: 1.0,
+            owner_id: 1,
+        };
         m.decay(0.3);
         assert!((m.strength - 0.7).abs() < f32::EPSILON);
     }
 
     #[test]
     fn mark_decays_to_zero() {
-        let mut m = TerritoryMark { position: [0.0; 3], strength: 0.1, owner_id: 1 };
+        let mut m = TerritoryMark {
+            position: [0.0; 3],
+            strength: 0.1,
+            owner_id: 1,
+        };
         m.decay(0.5);
         assert_eq!(m.strength, 0.0);
     }
 
     #[test]
     fn weak_mark_inactive() {
-        let m = TerritoryMark { position: [0.0; 3], strength: 0.01, owner_id: 1 };
+        let m = TerritoryMark {
+            position: [0.0; 3],
+            strength: 0.01,
+            owner_id: 1,
+        };
         assert!(!m.is_active());
     }
 

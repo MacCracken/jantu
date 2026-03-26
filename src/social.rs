@@ -3,7 +3,18 @@ use serde::{Deserialize, Serialize};
 /// Social role within a group.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
-pub enum SocialRole { Alpha, Beta, Subordinate, Omega, Sentinel, Scout, Worker, Queen, Drone, Solitary }
+pub enum SocialRole {
+    Alpha,
+    Beta,
+    Subordinate,
+    Omega,
+    Sentinel,
+    Scout,
+    Worker,
+    Queen,
+    Drone,
+    Solitary,
+}
 
 /// Position in dominance hierarchy (0.0 = bottom, 1.0 = top).
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
@@ -11,13 +22,24 @@ pub struct HierarchyPosition(f32);
 
 impl HierarchyPosition {
     #[must_use]
-    pub fn new(value: f32) -> Self { Self(value.clamp(0.0, 1.0)) }
-    #[must_use] #[inline]
-    pub fn value(&self) -> f32 { self.0 }
-    #[must_use] #[inline]
-    pub fn is_dominant(&self) -> bool { self.0 > 0.7 }
-    #[must_use] #[inline]
-    pub fn is_subordinate(&self) -> bool { self.0 < 0.3 }
+    pub fn new(value: f32) -> Self {
+        Self(value.clamp(0.0, 1.0))
+    }
+    #[must_use]
+    #[inline]
+    pub fn value(&self) -> f32 {
+        self.0
+    }
+    #[must_use]
+    #[inline]
+    pub fn is_dominant(&self) -> bool {
+        self.0 > 0.7
+    }
+    #[must_use]
+    #[inline]
+    pub fn is_subordinate(&self) -> bool {
+        self.0 < 0.3
+    }
 
     /// Dominance contest: higher position + aggression wins.
     #[must_use]
@@ -29,7 +51,9 @@ impl HierarchyPosition {
 /// Group cohesion (0.0 = scattered, 1.0 = tight formation).
 #[must_use]
 pub fn group_cohesion(distances: &[f32], max_distance: f32) -> f32 {
-    if distances.is_empty() || max_distance <= 0.0 { return 0.0; }
+    if distances.is_empty() || max_distance <= 0.0 {
+        return 0.0;
+    }
     let avg = distances.iter().sum::<f32>() / distances.len() as f32;
     (1.0 - avg / max_distance).clamp(0.0, 1.0)
 }
@@ -37,6 +61,34 @@ pub fn group_cohesion(distances: &[f32], max_distance: f32) -> f32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn serde_roundtrip_social_role() {
+        for r in [
+            SocialRole::Alpha,
+            SocialRole::Beta,
+            SocialRole::Subordinate,
+            SocialRole::Omega,
+            SocialRole::Sentinel,
+            SocialRole::Scout,
+            SocialRole::Worker,
+            SocialRole::Queen,
+            SocialRole::Drone,
+            SocialRole::Solitary,
+        ] {
+            let json = serde_json::to_string(&r).unwrap();
+            let r2: SocialRole = serde_json::from_str(&json).unwrap();
+            assert_eq!(r, r2);
+        }
+    }
+
+    #[test]
+    fn serde_roundtrip_hierarchy_position() {
+        let h = HierarchyPosition::new(0.85);
+        let json = serde_json::to_string(&h).unwrap();
+        let h2: HierarchyPosition = serde_json::from_str(&json).unwrap();
+        assert_eq!(h, h2);
+    }
 
     #[test]
     fn alpha_is_dominant() {

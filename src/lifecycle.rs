@@ -3,7 +3,14 @@ use serde::{Deserialize, Serialize};
 /// Creature lifecycle stage.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
-pub enum LifeStage { Egg, Juvenile, Adolescent, Adult, Elder, Deceased }
+pub enum LifeStage {
+    Egg,
+    Juvenile,
+    Adolescent,
+    Adult,
+    Elder,
+    Deceased,
+}
 
 /// Metabolic rate relative to body mass (Kleiber's law).
 ///
@@ -11,7 +18,9 @@ pub enum LifeStage { Egg, Juvenile, Adolescent, Adult, Elder, Deceased }
 #[must_use]
 #[inline]
 pub fn basal_metabolic_rate(body_mass_kg: f32, constant: f32) -> f32 {
-    if body_mass_kg <= 0.0 { return 0.0; }
+    if body_mass_kg <= 0.0 {
+        return 0.0;
+    }
     constant * body_mass_kg.powf(0.75)
 }
 
@@ -21,7 +30,9 @@ pub fn basal_metabolic_rate(body_mass_kg: f32, constant: f32) -> f32 {
 #[must_use]
 #[inline]
 pub fn estimated_lifespan_years(body_mass_kg: f32, constant: f32) -> f32 {
-    if body_mass_kg <= 0.0 { return 0.0; }
+    if body_mass_kg <= 0.0 {
+        return 0.0;
+    }
     constant * body_mass_kg.powf(0.25)
 }
 
@@ -31,13 +42,31 @@ pub fn estimated_lifespan_years(body_mass_kg: f32, constant: f32) -> f32 {
 #[must_use]
 #[inline]
 pub fn heart_rate_bpm(body_mass_kg: f32, constant: f32) -> f32 {
-    if body_mass_kg <= 0.0 { return 0.0; }
+    if body_mass_kg <= 0.0 {
+        return 0.0;
+    }
     constant * body_mass_kg.powf(-0.25)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn serde_roundtrip_life_stage() {
+        for s in [
+            LifeStage::Egg,
+            LifeStage::Juvenile,
+            LifeStage::Adolescent,
+            LifeStage::Adult,
+            LifeStage::Elder,
+            LifeStage::Deceased,
+        ] {
+            let json = serde_json::to_string(&s).unwrap();
+            let s2: LifeStage = serde_json::from_str(&json).unwrap();
+            assert_eq!(s, s2);
+        }
+    }
 
     #[test]
     fn larger_animal_higher_bmr() {
@@ -73,6 +102,9 @@ mod tests {
         let m1 = basal_metabolic_rate(10.0, 70.0);
         let m2 = basal_metabolic_rate(20.0, 70.0);
         let ratio = m2 / m1;
-        assert!((ratio - 1.68).abs() < 0.05, "ratio should be ~1.68, got {ratio}");
+        assert!(
+            (ratio - 1.68).abs() < 0.05,
+            "ratio should be ~1.68, got {ratio}"
+        );
     }
 }

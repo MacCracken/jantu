@@ -1,0 +1,21 @@
+test instinct/drive_level_new ... bench:           0 ns/iter (+/- 0)
+test instinct/update_priority ... bench:           0 ns/iter (+/- 0)
+test instinct/dominant_instinct_9 ... bench:           5 ns/iter (+/- 0)
+
+test select_threat_response ... bench:           3 ns/iter (+/- 0)
+
+test lifecycle/basal_metabolic_rate ... bench:           6 ns/iter (+/- 0)
+test lifecycle/estimated_lifespan ... bench:           6 ns/iter (+/- 1)
+test lifecycle/heart_rate_bpm ... bench:           6 ns/iter (+/- 0)
+
+test pack/hunt_success_probability ... bench:           4 ns/iter (+/- 0)
+test pack/food_share ... bench:           9 ns/iter (+/- 0)
+
+test social/hierarchy_contest ... bench:           1 ns/iter (+/- 0)
+test social/group_cohesion_100 ... bench:          48 ns/iter (+/- 0)
+
+test swarm/path_selection_probability ... bench:           3 ns/iter (+/- 0)
+test swarm/quorum_reached ... bench:           1 ns/iter (+/- 0)
+
+test territorial_response ... bench:           1 ns/iter (+/- 0)
+

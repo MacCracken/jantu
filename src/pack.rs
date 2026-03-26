@@ -3,7 +3,14 @@ use serde::{Deserialize, Serialize};
 /// Pack hunting coordination phase.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
-pub enum HuntPhase { Searching, Stalking, Chasing, Encircling, Attack, Feeding }
+pub enum HuntPhase {
+    Searching,
+    Stalking,
+    Chasing,
+    Encircling,
+    Attack,
+    Feeding,
+}
 
 /// Pack hunting success probability based on pack size and prey size ratio.
 #[must_use]
@@ -16,15 +23,35 @@ pub fn hunt_success_probability(pack_size: u32, prey_difficulty: f32) -> f32 {
 /// Food share based on dominance hierarchy.
 #[must_use]
 pub fn food_share(rank: f32, pack_size: u32) -> f32 {
-    if pack_size == 0 { return 0.0; }
+    if pack_size == 0 {
+        return 0.0;
+    }
     // Higher rank gets disproportionately more
-    let total_weight: f32 = (0..pack_size).map(|i| (i as f32 / pack_size as f32 + 0.1)).sum();
+    let total_weight: f32 = (0..pack_size)
+        .map(|i| i as f32 / pack_size as f32 + 0.1)
+        .sum();
     (rank + 0.1) / total_weight
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn serde_roundtrip_hunt_phase() {
+        for p in [
+            HuntPhase::Searching,
+            HuntPhase::Stalking,
+            HuntPhase::Chasing,
+            HuntPhase::Encircling,
+            HuntPhase::Attack,
+            HuntPhase::Feeding,
+        ] {
+            let json = serde_json::to_string(&p).unwrap();
+            let p2: HuntPhase = serde_json::from_str(&json).unwrap();
+            assert_eq!(p, p2);
+        }
+    }
 
     #[test]
     fn larger_pack_better_success() {
