@@ -1,4 +1,4 @@
-.PHONY: check fmt clippy test audit deny bench coverage build doc clean
+.PHONY: check fmt clippy test audit deny bench coverage build doc wasm clean
 
 check: fmt clippy test audit
 
@@ -28,6 +28,9 @@ build:
 
 doc:
 	RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --all-features
+
+wasm:
+	cargo build --target wasm32-unknown-unknown
 
 clean:
 	cargo clean

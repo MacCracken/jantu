@@ -1,14 +1,29 @@
 use serde::{Deserialize, Serialize};
 
 /// Pack hunting coordination phase.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::pack::HuntPhase;
+///
+/// let phase = HuntPhase::Stalking;
+/// assert_ne!(phase, HuntPhase::Feeding);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum HuntPhase {
+    /// Scanning for prey.
     Searching,
+    /// Approaching undetected.
     Stalking,
+    /// Active pursuit.
     Chasing,
+    /// Surrounding the prey.
     Encircling,
+    /// The kill attempt.
     Attack,
+    /// Post-kill consumption.
     Feeding,
 }
 

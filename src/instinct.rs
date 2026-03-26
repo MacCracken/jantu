@@ -17,47 +17,88 @@ use serde::{Deserialize, Serialize};
 pub struct DriveLevel(f32);
 
 impl DriveLevel {
+    /// Create a new drive level, clamped to [0.0, 1.0].
     #[must_use]
     pub fn new(value: f32) -> Self {
         Self(value.clamp(0.0, 1.0))
     }
+    /// Get the raw drive value.
     #[must_use]
     #[inline]
     pub fn value(&self) -> f32 {
         self.0
     }
+    /// Whether this drive is at critical level (> 0.8).
     #[must_use]
     #[inline]
     pub fn is_critical(&self) -> bool {
         self.0 > 0.8
     }
+    /// Whether this drive is sated (< 0.2).
     #[must_use]
     #[inline]
     pub fn is_sated(&self) -> bool {
         self.0 < 0.2
     }
 
+    /// Increase the drive level by `amount`, clamped to 1.0.
+    ///
+    /// ```
+    /// use jantu::instinct::DriveLevel;
+    ///
+    /// let mut drive = DriveLevel::new(0.5);
+    /// drive.increase(0.3);
+    /// assert!((drive.value() - 0.8).abs() < f32::EPSILON);
+    /// ```
     pub fn increase(&mut self, amount: f32) {
         self.0 = (self.0 + amount).clamp(0.0, 1.0);
     }
+
+    /// Decrease the drive level by `amount`, clamped to 0.0.
+    ///
+    /// ```
+    /// use jantu::instinct::DriveLevel;
+    ///
+    /// let mut drive = DriveLevel::new(0.5);
+    /// drive.decrease(0.4);
+    /// assert!((drive.value() - 0.1).abs() < f32::EPSILON);
+    /// ```
     pub fn decrease(&mut self, amount: f32) {
         self.0 = (self.0 - amount).clamp(0.0, 1.0);
     }
 }
 
 /// Core instinct types (Tinbergen's four questions mapped to drives).
+///
+/// # Examples
+///
+/// ```
+/// use jantu::instinct::InstinctType;
+///
+/// let drive = InstinctType::Hunger;
+/// assert_ne!(drive, InstinctType::Fear);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum InstinctType {
-    Hunger,       // foraging drive
-    Thirst,       // water seeking
-    Fear,         // threat avoidance
-    Aggression,   // territorial/competitive
-    Reproduction, // mate seeking
-    Nurturing,    // offspring care
-    Curiosity,    // exploration/play
-    Social,       // group affiliation
-    Rest,         // energy conservation
+    /// Foraging drive.
+    Hunger,
+    /// Water-seeking drive.
+    Thirst,
+    /// Threat avoidance.
+    Fear,
+    /// Territorial/competitive drive.
+    Aggression,
+    /// Mate-seeking drive.
+    Reproduction,
+    /// Offspring care.
+    Nurturing,
+    /// Exploration and play.
+    Curiosity,
+    /// Group affiliation.
+    Social,
+    /// Energy conservation.
+    Rest,
 }
 
 /// An active instinct with its current drive level.
@@ -73,12 +114,16 @@ pub enum InstinctType {
 /// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Instinct {
+    /// Which instinct this represents.
     pub instinct_type: InstinctType,
+    /// Current drive level (0.0 = sated, 1.0 = critical).
     pub drive: DriveLevel,
-    pub priority: f32, // 0.0-1.0, how urgently this instinct demands behavior
+    /// Computed priority (0.0–1.0) — how urgently this instinct demands behavior.
+    pub priority: f32,
 }
 
 impl Instinct {
+    /// Create a new instinct with default drive (0.5) and priority (0.5).
     #[must_use]
     pub fn new(instinct_type: InstinctType) -> Self {
         Self {
@@ -123,7 +168,7 @@ pub fn dominant_instinct(instincts: &[Instinct]) -> Option<&Instinct> {
     instincts.iter().max_by(|a, b| {
         a.priority
             .partial_cmp(&b.priority)
-            .unwrap_or(std::cmp::Ordering::Equal)
+            .unwrap_or(core::cmp::Ordering::Equal)
     })
 }
 

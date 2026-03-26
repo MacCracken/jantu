@@ -12,6 +12,15 @@
 use serde::{Deserialize, Serialize};
 
 /// An emotional state that can spread between creatures.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::contagion::EmotionalState;
+///
+/// let state = EmotionalState::Fear;
+/// assert_ne!(state, EmotionalState::Calm);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum EmotionalState {
@@ -26,6 +35,16 @@ pub enum EmotionalState {
 }
 
 /// Susceptibility profile controlling how easily a creature catches emotions.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::contagion::Susceptibility;
+///
+/// let low_rank = Susceptibility::new(0.7, 0.1, 0.3);
+/// let high_rank = Susceptibility::new(0.7, 0.9, 0.3);
+/// assert!(low_rank.effective() > high_rank.effective());
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Susceptibility {
     /// Base susceptibility (0.0-1.0). Higher = more easily influenced.
@@ -103,6 +122,14 @@ pub fn emotional_influence(
 /// Returns the dominant state and its total pressure.
 ///
 /// Congruent influences sum; the state with the highest total wins.
+///
+/// ```
+/// use jantu::contagion::{aggregate_pressure, EmotionalState};
+///
+/// let influences = [(0.8, EmotionalState::Fear), (0.5, EmotionalState::Calm)];
+/// let (state, _) = aggregate_pressure(&influences).unwrap();
+/// assert_eq!(state, EmotionalState::Fear);
+/// ```
 #[must_use]
 pub fn aggregate_pressure(influences: &[(f32, EmotionalState)]) -> Option<(EmotionalState, f32)> {
     if influences.is_empty() {
@@ -132,7 +159,7 @@ pub fn aggregate_pressure(influences: &[(f32, EmotionalState)]) -> Option<(Emoti
 
     candidates
         .iter()
-        .max_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal))
+        .max_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(core::cmp::Ordering::Equal))
         .map(|&(total, state)| (state, total))
 }
 
@@ -143,6 +170,14 @@ pub fn aggregate_pressure(influences: &[(f32, EmotionalState)]) -> Option<(Emoti
 /// `state_match`: whether the receiver already feels the same emotion (amplifies transfer)
 ///
 /// Returns the drive change to apply (0.0-1.0).
+///
+/// ```
+/// use jantu::contagion::contagion_transfer;
+///
+/// let matched = contagion_transfer(0.5, 0.8, true);
+/// let unmatched = contagion_transfer(0.5, 0.8, false);
+/// assert!(matched > unmatched);
+/// ```
 #[must_use]
 pub fn contagion_transfer(influence: f32, susceptibility: f32, state_match: bool) -> f32 {
     let base = influence * susceptibility;

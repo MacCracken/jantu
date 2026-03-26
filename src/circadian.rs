@@ -9,6 +9,15 @@
 use serde::{Deserialize, Serialize};
 
 /// Activity pattern classification.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::circadian::ActivityPattern;
+///
+/// let pattern = ActivityPattern::Nocturnal;
+/// assert_ne!(pattern, ActivityPattern::Diurnal);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum ActivityPattern {
@@ -69,13 +78,13 @@ impl CircadianClock {
             return 1.0;
         }
 
-        let phase = std::f32::consts::TAU * (hour - self.phase_offset) / self.period_hours;
+        let phase = core::f32::consts::TAU * (hour - self.phase_offset) / self.period_hours;
 
         let raw = match self.pattern {
             // Diurnal: peak at noon (hour 12 with default phase)
-            ActivityPattern::Diurnal => (phase - std::f32::consts::PI).cos(),
+            ActivityPattern::Diurnal => (phase - core::f32::consts::PI).cos(),
             // Nocturnal: peak at midnight (inverted diurnal)
-            ActivityPattern::Nocturnal => -(phase - std::f32::consts::PI).cos(),
+            ActivityPattern::Nocturnal => -(phase - core::f32::consts::PI).cos(),
             // Crepuscular: peaks at dawn (hour 6) and dusk (hour 18)
             ActivityPattern::Crepuscular => -(2.0 * phase).cos(),
             // Cathemeral handled by early return above; future variants default to flat
@@ -92,6 +101,15 @@ impl CircadianClock {
     /// Returns a multiplier to apply to the instinct's drive level.
     /// Activity-linked drives (hunger, thirst) increase during active periods;
     /// rest drive increases during inactive periods.
+    ///
+    /// ```
+    /// use jantu::circadian::{CircadianClock, ActivityPattern};
+    ///
+    /// let clock = CircadianClock::new(ActivityPattern::Diurnal);
+    /// let rest_at_midnight = clock.drive_modifier(0.0, true);
+    /// let rest_at_noon = clock.drive_modifier(12.0, true);
+    /// assert!(rest_at_midnight > rest_at_noon);
+    /// ```
     #[must_use]
     pub fn drive_modifier(&self, hour: f32, is_rest_drive: bool) -> f32 {
         let activity = self.activity_level(hour);
@@ -111,6 +129,13 @@ impl CircadianClock {
 /// `current_phase` and `light_phase` are in hours. Returns a phase correction
 /// in hours to gradually entrain the clock. `entrainment_rate` controls speed
 /// (0.0-1.0, typically 0.1-0.3 per day).
+///
+/// ```
+/// use jantu::circadian::zeitgeber_correction;
+///
+/// let correction = zeitgeber_correction(2.0, 0.0, 24.0, 0.2);
+/// assert!(correction < 0.0); // pulls phase backward toward light
+/// ```
 #[must_use]
 pub fn zeitgeber_correction(
     current_phase: f32,

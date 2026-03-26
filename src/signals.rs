@@ -7,6 +7,15 @@
 use serde::{Deserialize, Serialize};
 
 /// Signal modality (communication channel).
+///
+/// # Examples
+///
+/// ```
+/// use jantu::signals::SignalModality;
+///
+/// let modality = SignalModality::Acoustic;
+/// assert_ne!(modality, SignalModality::Visual);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum SignalModality {
@@ -25,6 +34,15 @@ pub enum SignalModality {
 }
 
 /// Signal function (purpose).
+///
+/// # Examples
+///
+/// ```
+/// use jantu::signals::SignalFunction;
+///
+/// let func = SignalFunction::Alarm;
+/// assert_ne!(func, SignalFunction::MatingCall);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum SignalFunction {
@@ -47,6 +65,15 @@ pub enum SignalFunction {
 }
 
 /// A signal emission event.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::signals::{Signal, SignalModality, SignalFunction};
+///
+/// let signal = Signal::new(SignalModality::Acoustic, SignalFunction::Alarm, 0.9);
+/// assert!((signal.intensity - 0.9).abs() < f32::EPSILON);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Signal {
     /// What modality is used.
@@ -101,6 +128,14 @@ pub fn signal_range(modality: SignalModality, intensity: f32) -> f32 {
 /// Compute the energetic cost of producing a signal.
 ///
 /// Honest signals are costlier (handicap principle). Higher intensity costs more.
+///
+/// ```
+/// use jantu::signals::signal_cost;
+///
+/// let honest = signal_cost(0.8, 1.0);
+/// let dishonest = signal_cost(0.8, 0.0);
+/// assert!(honest > dishonest);
+/// ```
 #[must_use]
 pub fn signal_cost(intensity: f32, honesty: f32) -> f32 {
     let intensity = intensity.clamp(0.0, 1.0);
@@ -117,6 +152,14 @@ pub fn signal_cost(intensity: f32, honesty: f32) -> f32 {
 /// - `noise_level`: ambient noise in the channel (0.0-1.0)
 ///
 /// Returns detection probability (0.0-1.0).
+///
+/// ```
+/// use jantu::signals::detection_probability;
+///
+/// let close = detection_probability(0.8, 5.0, 100.0, 0.1);
+/// let far = detection_probability(0.8, 90.0, 100.0, 0.1);
+/// assert!(close > far);
+/// ```
 #[must_use]
 pub fn detection_probability(
     signal_intensity: f32,
@@ -150,6 +193,14 @@ pub fn detection_probability(
 /// - `receiver_state_match`: how relevant the signal is to receiver's current needs (0.0-1.0)
 ///
 /// Returns response intensity (0.0-1.0).
+///
+/// ```
+/// use jantu::signals::receiver_response;
+///
+/// let trusted = receiver_response(1.0, 0.9, 0.8);
+/// let stranger = receiver_response(0.2, 0.0, 0.8);
+/// assert!(trusted > stranger);
+/// ```
 #[must_use]
 pub fn receiver_response(
     signal_honesty: f32,

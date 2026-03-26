@@ -35,6 +35,16 @@ pub struct StimulusResponse {
 }
 
 /// Parameters controlling habituation/sensitization dynamics.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::habituation::HabituationParams;
+///
+/// let params = HabituationParams::default();
+/// assert!(params.habituation_rate > 0.0);
+/// assert!(params.sensitization_decay > params.habituation_decay);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HabituationParams {
     /// Rate of habituation buildup per exposure (0.0-1.0).
@@ -144,6 +154,14 @@ impl Default for StimulusResponse {
 ///
 /// `intensity` is the strength of the dishabituating stimulus (0.0-1.0).
 /// Returns the sensitization boost applied.
+///
+/// ```
+/// use jantu::habituation::{dishabituation_boost, HabituationParams};
+///
+/// let params = HabituationParams::default();
+/// let boost = dishabituation_boost(0.9, &params);
+/// assert!(boost > 0.0);
+/// ```
 #[must_use]
 pub fn dishabituation_boost(intensity: f32, params: &HabituationParams) -> f32 {
     let intensity = intensity.clamp(0.0, 1.0);

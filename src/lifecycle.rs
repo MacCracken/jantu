@@ -1,14 +1,29 @@
 use serde::{Deserialize, Serialize};
 
 /// Creature lifecycle stage.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::lifecycle::LifeStage;
+///
+/// let stage = LifeStage::Adult;
+/// assert_ne!(stage, LifeStage::Juvenile);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum LifeStage {
+    /// Unhatched or gestating.
     Egg,
+    /// Post-birth, pre-adolescent.
     Juvenile,
+    /// Developing toward maturity.
     Adolescent,
+    /// Reproductively mature.
     Adult,
+    /// Post-reproductive decline.
     Elder,
+    /// No longer alive.
     Deceased,
 }
 
@@ -35,6 +50,14 @@ pub fn basal_metabolic_rate(body_mass_kg: f32, constant: f32) -> f32 {
 /// Lifespan scaling (Kleiber): larger animals live longer.
 ///
 /// Lifespan ∝ M^0.25
+///
+/// ```
+/// use jantu::lifecycle::estimated_lifespan_years;
+///
+/// let mouse = estimated_lifespan_years(0.02, 10.0);
+/// let elephant = estimated_lifespan_years(5000.0, 10.0);
+/// assert!(elephant > mouse);
+/// ```
 #[must_use]
 #[inline]
 pub fn estimated_lifespan_years(body_mass_kg: f32, constant: f32) -> f32 {
@@ -47,6 +70,14 @@ pub fn estimated_lifespan_years(body_mass_kg: f32, constant: f32) -> f32 {
 /// Heart rate scaling: smaller animals have faster hearts.
 ///
 /// HR ∝ M^(-0.25)
+///
+/// ```
+/// use jantu::lifecycle::heart_rate_bpm;
+///
+/// let mouse_hr = heart_rate_bpm(0.02, 200.0);
+/// let elephant_hr = heart_rate_bpm(5000.0, 200.0);
+/// assert!(mouse_hr > elephant_hr);
+/// ```
 #[must_use]
 #[inline]
 pub fn heart_rate_bpm(body_mass_kg: f32, constant: f32) -> f32 {

@@ -1,18 +1,37 @@
 use serde::{Deserialize, Serialize};
 
 /// Social role within a group.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::social::SocialRole;
+///
+/// let role = SocialRole::Alpha;
+/// assert_ne!(role, SocialRole::Omega);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum SocialRole {
+    /// Dominant leader.
     Alpha,
+    /// Second in command.
     Beta,
+    /// Rank-and-file member.
     Subordinate,
+    /// Lowest-ranking member.
     Omega,
+    /// Lookout/guard.
     Sentinel,
+    /// Explorer/pathfinder.
     Scout,
+    /// General laborer (eusocial).
     Worker,
+    /// Reproductive female (eusocial).
     Queen,
+    /// Reproductive male (eusocial).
     Drone,
+    /// Non-group-living individual.
     Solitary,
 }
 
@@ -29,20 +48,24 @@ pub enum SocialRole {
 pub struct HierarchyPosition(f32);
 
 impl HierarchyPosition {
+    /// Create a new hierarchy position, clamped to [0.0, 1.0].
     #[must_use]
     pub fn new(value: f32) -> Self {
         Self(value.clamp(0.0, 1.0))
     }
+    /// Get the raw position value.
     #[must_use]
     #[inline]
     pub fn value(&self) -> f32 {
         self.0
     }
+    /// Whether this position is dominant (> 0.7).
     #[must_use]
     #[inline]
     pub fn is_dominant(&self) -> bool {
         self.0 > 0.7
     }
+    /// Whether this position is subordinate (< 0.3).
     #[must_use]
     #[inline]
     pub fn is_subordinate(&self) -> bool {

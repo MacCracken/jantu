@@ -12,8 +12,11 @@ use serde::{Deserialize, Serialize};
 /// ```
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct TerritoryMark {
+    /// World-space position of the mark.
     pub position: [f32; 3],
+    /// Current strength (0.0 = unmarked, 1.0 = freshly marked).
     pub strength: f32,
+    /// Unique identifier of the marking creature.
     pub owner_id: u64,
 }
 

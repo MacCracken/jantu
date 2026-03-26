@@ -1,26 +1,55 @@
 use serde::{Deserialize, Serialize};
 
 /// Survival state of a creature.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::survival::SurvivalState;
+///
+/// let state = SurvivalState::Threatened;
+/// assert_ne!(state, SurvivalState::Thriving);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum SurvivalState {
-    Thriving,   // all needs met, low stress
-    Stable,     // needs mostly met
-    Stressed,   // one or more critical drives
-    Threatened, // immediate danger detected
-    Fleeing,    // active flight response
-    Fighting,   // active fight response
-    Freezing,   // freeze response (playing dead)
+    /// All needs met, low stress.
+    Thriving,
+    /// Needs mostly met.
+    Stable,
+    /// One or more critical drives.
+    Stressed,
+    /// Immediate danger detected.
+    Threatened,
+    /// Active flight response.
+    Fleeing,
+    /// Active fight response.
+    Fighting,
+    /// Freeze response (playing dead).
+    Freezing,
 }
 
 /// Threat response classification (fight, flight, freeze, fawn).
+///
+/// # Examples
+///
+/// ```
+/// use jantu::survival::ThreatResponse;
+///
+/// let response = ThreatResponse::Flight;
+/// assert_ne!(response, ThreatResponse::Fight);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum ThreatResponse {
-    Fight,  // confront the threat (high aggression, size advantage)
-    Flight, // run away (high fear, speed advantage)
-    Freeze, // remain motionless (camouflage, small size)
-    Fawn,   // submit/appease (social species, lower rank)
+    /// Confront the threat (high aggression, size advantage).
+    Fight,
+    /// Run away (high fear, speed advantage).
+    Flight,
+    /// Remain motionless (camouflage, small size).
+    Freeze,
+    /// Submit/appease (social species, lower rank).
+    Fawn,
 }
 
 /// Select threat response based on creature traits.
@@ -60,7 +89,7 @@ pub fn select_threat_response(
     // Using unwrap_or with a default to satisfy the zero-unwrap rule.
     scores
         .iter()
-        .max_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal))
+        .max_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(core::cmp::Ordering::Equal))
         .map_or(ThreatResponse::Freeze, |s| s.1)
 }
 

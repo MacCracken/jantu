@@ -12,6 +12,15 @@
 use serde::{Deserialize, Serialize};
 
 /// Stressor category.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::stress::StressorType;
+///
+/// let stressor = StressorType::Predation;
+/// assert_ne!(stressor, StressorType::Isolation);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum StressorType {
@@ -159,6 +168,14 @@ pub fn stress_drive_modifier(chronic_stress: f32, is_anxiety_drive: bool) -> f32
 /// Compute immune suppression from chronic stress.
 ///
 /// Returns a health modifier (0.0-1.0) where lower = more immunosuppressed.
+///
+/// ```
+/// use jantu::stress::immune_function;
+///
+/// let healthy = immune_function(0.0, 1.0);
+/// let stressed = immune_function(0.8, 0.3);
+/// assert!(healthy > stressed);
+/// ```
 #[must_use]
 pub fn immune_function(chronic_stress: f32, resilience: f32) -> f32 {
     let chronic_stress = chronic_stress.clamp(0.0, 1.0);

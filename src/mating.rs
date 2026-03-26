@@ -7,6 +7,15 @@
 use serde::{Deserialize, Serialize};
 
 /// Mating system classification.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::mating::MatingSystem;
+///
+/// let system = MatingSystem::Monogamous;
+/// assert_ne!(system, MatingSystem::Lek);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum MatingSystem {
@@ -23,6 +32,15 @@ pub enum MatingSystem {
 }
 
 /// Courtship display phase.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::mating::CourtshipPhase;
+///
+/// let phase = CourtshipPhase::Displaying;
+/// assert_ne!(phase, CourtshipPhase::Rejected);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum CourtshipPhase {
@@ -41,6 +59,18 @@ pub enum CourtshipPhase {
 }
 
 /// Fitness traits relevant to mate selection.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::mating::FitnessTraits;
+///
+/// let traits = FitnessTraits {
+///     condition: 0.9, display_quality: 0.8,
+///     territory_quality: 0.7, genetic_quality: 0.6, vigor: 0.8,
+/// };
+/// assert!(traits.attractiveness() > 0.5);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FitnessTraits {
     /// Physical condition / body quality (0.0-1.0).
@@ -115,6 +145,14 @@ pub fn mate_acceptance(candidate: &FitnessTraits, chooser_threshold: f32, compet
 ///
 /// More elaborate displays are costlier but signal higher quality.
 /// Returns the energy cost as a fraction of reserves (0.0-1.0).
+///
+/// ```
+/// use jantu::mating::display_cost;
+///
+/// let strong = display_cost(0.8, 0.9);
+/// let weak = display_cost(0.8, 0.3);
+/// assert!(weak > strong); // poor condition makes displays costlier
+/// ```
 #[must_use]
 pub fn display_cost(display_intensity: f32, body_condition: f32) -> f32 {
     let display_intensity = display_intensity.clamp(0.0, 1.0);
@@ -132,6 +170,14 @@ pub fn display_cost(display_intensity: f32, body_condition: f32) -> f32 {
 /// Higher ratio = stronger selection pressure on the competing sex.
 ///
 /// Returns a trait amplification multiplier (1.0 = no extra pressure).
+///
+/// ```
+/// use jantu::mating::selection_pressure;
+///
+/// let balanced = selection_pressure(1.0);
+/// let skewed = selection_pressure(5.0);
+/// assert!(skewed > balanced);
+/// ```
 #[must_use]
 pub fn selection_pressure(operational_sex_ratio: f32) -> f32 {
     if operational_sex_ratio <= 0.0 {

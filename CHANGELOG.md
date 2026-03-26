@@ -6,8 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-03-26
+
 ### Added
 
+- **`no_std` support**: crate is now `no_std + alloc` by default — works on embedded targets and WASM without feature flags
+- **WASM target**: verified compilation for `wasm32-unknown-unknown`
+- **`std` feature flag**: opt-in for standard library; `logging` feature now implies `std`
+- **Complete documentation**: doc-tests with examples on every public type, function, and enum (80 doc-tests, up from 28)
+- **Usage guide**: `docs/guides/usage.md` with patterns for drive-based behavior, serialization, and module reference
 - **habituation** module: `StimulusResponse` with dual-process (Groves & Thompson 1970) habituation/sensitization, `HabituationParams` config, `dishabituation_boost()`, `generalized_habituation()` with quadratic similarity falloff. Intensity-dampened habituation rate ensures strong stimuli sensitize rather than habituate
 - **circadian** module: `CircadianClock` with sinusoidal activity oscillator, `ActivityPattern` enum (Diurnal/Nocturnal/Crepuscular/Cathemeral), `drive_modifier()` for rest-inverse scaling, `zeitgeber_correction()` for light-cycle entrainment with wraparound. Supports custom periods for non-Earth environments
 - **contagion** module: `EmotionalState` enum (Fear/Aggression/Calm/Excitement), `Susceptibility` profile with rank/arousal modulation, `emotional_influence()` with inverse-square proximity falloff and rank boost, `aggregate_pressure()` for group-level emotional dominance, `contagion_transfer()` with state-match amplification
@@ -21,11 +28,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - 40 criterion benchmarks covering all modules (all sub-60ns)
 - 166 unit tests + 6 integration tests, all passing
 
+### Changed
+
+- Replaced all `std::` references with `core::` equivalents for `no_std` compatibility
+- serde dependency now uses `default-features = false` with `derive` + `alloc` features
+- tracing dependency now uses `default-features = false`
+- `logging` feature now requires `std` feature
+
+### Removed
+
+- Unused `hisab` dependency
+
 ### Fixed
 
 - Removed `unwrap()` in `survival::select_threat_response()` — replaced with `map_or` fallback
 - Fixed deprecated license identifier `GPL-3.0` → `GPL-3.0-only` in `Cargo.toml`
 - Fixed unnecessary parentheses clippy lint in `pack::food_share()`
+
+### Stats
+
+- 166 unit tests + 6 integration tests + 80 doc-tests = **252 tests passing**
+- 40 criterion benchmarks, all sub-50ns (heaviest: `group_cohesion_100` at 47ns)
+- Zero clippy warnings (`--all-features --all-targets -D warnings`)
+- Zero `cargo audit` advisories
+- Zero `unsafe` blocks
+- `wasm32-unknown-unknown` build verified
 
 ## [0.1.0] - 2026-03-26
 

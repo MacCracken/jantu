@@ -49,6 +49,15 @@ impl HeritableTrait {
 }
 
 /// A behavioral genotype — a set of heritable trait values.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::genetics::BehavioralGenome;
+///
+/// let genome = BehavioralGenome::default_genome();
+/// assert!((genome.aggression.genotype - 0.5).abs() < f32::EPSILON);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BehavioralGenome {
     /// Innate aggression tendency.
@@ -99,6 +108,15 @@ pub fn inherit_trait(parent_a: f32, parent_b: f32, mutation: f32) -> f32 {
 ///
 /// `mutations` provides per-trait mutation offsets [aggression, boldness,
 /// sociability, activity, exploration].
+///
+/// ```
+/// use jantu::genetics::{BehavioralGenome, crossover};
+///
+/// let a = BehavioralGenome::default_genome();
+/// let b = BehavioralGenome::default_genome();
+/// let child = crossover(&a, &b, &[0.0; 5]);
+/// assert!((child.aggression.genotype - 0.5).abs() < f32::EPSILON);
+/// ```
 #[must_use]
 pub fn crossover(
     parent_a: &BehavioralGenome,
@@ -155,6 +173,14 @@ pub fn crossover(
 /// `environment`: environmental conditions for each trait (0.0-1.0).
 ///
 /// Returns a fitness score (0.0-1.0).
+///
+/// ```
+/// use jantu::genetics::{BehavioralGenome, genome_fitness};
+///
+/// let genome = BehavioralGenome::default_genome();
+/// let fitness = genome_fitness(&genome, &[1.0; 5], &[0.5; 5]);
+/// assert!(fitness > 0.0 && fitness <= 1.0);
+/// ```
 #[must_use]
 pub fn genome_fitness(
     genome: &BehavioralGenome,

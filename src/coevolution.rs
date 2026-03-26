@@ -7,6 +7,15 @@
 use serde::{Deserialize, Serialize};
 
 /// Ecological role in a predator-prey relationship.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::coevolution::EcologicalRole;
+///
+/// let role = EcologicalRole::ApexPredator;
+/// assert_ne!(role, EcologicalRole::Prey);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum EcologicalRole {
@@ -21,6 +30,15 @@ pub enum EcologicalRole {
 }
 
 /// Arms race trait category.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::coevolution::ArmsRaceTrait;
+///
+/// let trait_type = ArmsRaceTrait::Speed;
+/// assert_ne!(trait_type, ArmsRaceTrait::Toxicity);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum ArmsRaceTrait {
@@ -39,6 +57,16 @@ pub enum ArmsRaceTrait {
 }
 
 /// Trait levels for a predator-prey interaction pair.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::coevolution::{TraitMatchup, ArmsRaceTrait};
+///
+/// let m = TraitMatchup::new(ArmsRaceTrait::Speed, 0.8, 0.5);
+/// assert!((m.predator_advantage() - 0.3).abs() < f32::EPSILON);
+/// assert_eq!(m.prey_advantage(), 0.0);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TraitMatchup {
     /// Predator's trait level (0.0-1.0).
@@ -79,6 +107,14 @@ impl TraitMatchup {
 ///
 /// When the opponent's trait is higher, pressure to evolve increases.
 /// Returns a pressure value (0.0-1.0) that can drive trait change.
+///
+/// ```
+/// use jantu::coevolution::trait_pressure;
+///
+/// let pressure = trait_pressure(0.3, 0.8, 0.5);
+/// assert!(pressure > 0.0);
+/// assert_eq!(trait_pressure(0.9, 0.5, 1.0), 0.0); // no pressure when ahead
+/// ```
 #[must_use]
 pub fn trait_pressure(own_trait: f32, opponent_trait: f32, selection_intensity: f32) -> f32 {
     let own_trait = own_trait.clamp(0.0, 1.0);
@@ -97,6 +133,13 @@ pub fn trait_pressure(own_trait: f32, opponent_trait: f32, selection_intensity: 
 /// Given the rates of trait change for predator and prey, returns the
 /// net fitness shift for the predator. Positive = predator gaining ground,
 /// negative = prey gaining ground, near-zero = Red Queen stasis.
+///
+/// ```
+/// use jantu::coevolution::red_queen_balance;
+///
+/// assert!(red_queen_balance(0.3, 0.3).abs() < f32::EPSILON); // stasis
+/// assert!(red_queen_balance(0.5, 0.2) > 0.0); // predator gaining
+/// ```
 #[must_use]
 pub fn red_queen_balance(predator_rate: f32, prey_rate: f32) -> f32 {
     predator_rate - prey_rate
@@ -112,6 +155,14 @@ pub fn red_queen_balance(predator_rate: f32, prey_rate: f32) -> f32 {
 /// - `search_efficiency`: predator's ability to find prey (0.0-1.0)
 ///
 /// Returns encounters per unit time per unit area.
+///
+/// ```
+/// use jantu::coevolution::encounter_rate;
+///
+/// let rate = encounter_rate(5.0, 20.0, 0.5);
+/// assert!((rate - 50.0).abs() < f32::EPSILON);
+/// assert_eq!(encounter_rate(0.0, 20.0, 0.5), 0.0);
+/// ```
 #[must_use]
 pub fn encounter_rate(predator_density: f32, prey_density: f32, search_efficiency: f32) -> f32 {
     if predator_density <= 0.0 || prey_density <= 0.0 {

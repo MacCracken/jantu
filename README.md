@@ -56,16 +56,37 @@ let response = select_threat_response(
 
 ## Features
 
-- **`logging`** — Enables tracing-subscriber for `JANTU_LOG` env-filter logging
-- **`personality`** — Enables [bhava](https://github.com/MacCracken/bhava) personality integration
+| Feature | Default | Description |
+|---------|---------|-------------|
+| *(none)* | yes | `no_std + alloc` — works on embedded targets and WASM |
+| `std` | no | Enables standard library (required for `logging`) |
+| `logging` | no | Tracing subscriber with `JANTU_LOG` env-filter |
+| `personality` | no | [bhava](https://github.com/MacCracken/bhava) personality integration |
+
+### Platform Support
+
+- Native (all tier 1 targets)
+- `wasm32-unknown-unknown` (verified)
+- `no_std` environments with `alloc`
+
+## Consumers
+
+| Crate | Usage |
+|-------|-------|
+| [kiran](https://github.com/MacCracken/kiran) | Game engine — creature AI behaviors, NPC instincts |
+| [joshua](https://github.com/MacCracken/joshua) | Simulation — population dynamics, predator-prey modeling |
+| [bhava](https://github.com/MacCracken/bhava) | Human personality — builds on jantu's animal instinct layer |
+| AGNOS science stack | Ethology research, behavioral modeling |
 
 ## Design Principles
 
+- `no_std` by default — zero I/O, zero networking, minimal attack surface
 - `#[non_exhaustive]` on all public enums for forward compatibility
 - `#[must_use]` on all pure functions
+- `#[warn(missing_docs)]` enforced at compile time
 - All types implement `Serialize` + `Deserialize` (serde)
-- Zero `unwrap`/`panic` in library code
-- Feature-gated optional modules
+- Zero `unsafe` code, zero `unwrap`/`panic` in library code
+- Feature-gated optional modules — consumers pull only what they need
 
 ## License
 

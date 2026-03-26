@@ -76,3 +76,60 @@ test signals/detection_probability ... bench:           8 ns/iter (+/- 2)
 test genetics/crossover ... bench:           8 ns/iter (+/- 1)
 test genetics/genome_fitness ... bench:           8 ns/iter (+/- 2)
 
+test instinct/drive_level_new ... bench:           1 ns/iter (+/- 0)
+test instinct/update_priority ... bench:           0 ns/iter (+/- 0)
+test instinct/dominant_instinct_9 ... bench:           5 ns/iter (+/- 0)
+
+test select_threat_response ... bench:           3 ns/iter (+/- 0)
+
+test lifecycle/basal_metabolic_rate ... bench:           5 ns/iter (+/- 0)
+test lifecycle/estimated_lifespan ... bench:           6 ns/iter (+/- 0)
+test lifecycle/heart_rate_bpm ... bench:           5 ns/iter (+/- 0)
+
+test pack/hunt_success_probability ... bench:           3 ns/iter (+/- 0)
+test pack/food_share ... bench:           8 ns/iter (+/- 0)
+
+test social/hierarchy_contest ... bench:           1 ns/iter (+/- 0)
+test social/group_cohesion_100 ... bench:          47 ns/iter (+/- 0)
+
+test swarm/path_selection_probability ... bench:           3 ns/iter (+/- 0)
+test swarm/quorum_reached ... bench:           1 ns/iter (+/- 0)
+
+test territorial_response ... bench:           1 ns/iter (+/- 0)
+
+test habituation/expose ... bench:           5 ns/iter (+/- 0)
+test habituation/decay ... bench:           5 ns/iter (+/- 0)
+test habituation/response_multiplier ... bench:           0 ns/iter (+/- 0)
+
+test circadian/activity_level ... bench:           3 ns/iter (+/- 0)
+test circadian/drive_modifier ... bench:           5 ns/iter (+/- 0)
+test circadian/zeitgeber_correction ... bench:           1 ns/iter (+/- 0)
+
+test contagion/emotional_influence ... bench:           2 ns/iter (+/- 0)
+test contagion/aggregate_pressure_20 ... bench:          17 ns/iter (+/- 2)
+
+test migration/migratory_urge_obligate ... bench:           5 ns/iter (+/- 0)
+test migration/migration_energy_cost ... bench:           6 ns/iter (+/- 0)
+
+test mating/attractiveness ... bench:           1 ns/iter (+/- 0)
+test mating/mate_acceptance ... bench:          10 ns/iter (+/- 0)
+test mating/display_cost ... bench:           1 ns/iter (+/- 0)
+test mating/selection_pressure ... bench:           6 ns/iter (+/- 0)
+
+test coevolution/trait_pressure ... bench:           1 ns/iter (+/- 0)
+test coevolution/functional_response_type2 ... bench:           2 ns/iter (+/- 0)
+
+test stress/apply_stressor ... bench:           1 ns/iter (+/- 0)
+test stress/recover ... bench:           5 ns/iter (+/- 0)
+test stress/stress_drive_modifier ... bench:           0 ns/iter (+/- 0)
+
+test memory/reinforce ... bench:           3 ns/iter (+/- 0)
+test memory/forget ... bench:           1 ns/iter (+/- 0)
+test memory/social_recognition ... bench:           5 ns/iter (+/- 0)
+
+test signals/signal_range ... bench:           0 ns/iter (+/- 0)
+test signals/detection_probability ... bench:           7 ns/iter (+/- 0)
+
+test genetics/crossover ... bench:           7 ns/iter (+/- 0)
+test genetics/genome_fitness ... bench:           7 ns/iter (+/- 0)
+

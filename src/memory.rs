@@ -7,6 +7,15 @@
 use serde::{Deserialize, Serialize};
 
 /// Category of remembered information.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::memory::MemoryType;
+///
+/// let kind = MemoryType::FoodSource;
+/// assert_ne!(kind, MemoryType::Threat);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum MemoryType {
@@ -108,6 +117,14 @@ impl MemoryTrace {
 /// `familiarity` is the memory strength for this stimulus (0.0-1.0).
 ///
 /// Returns a fear modifier (0.0-1.0) where lower = less fear.
+///
+/// ```
+/// use jantu::memory::neophobia_modifier;
+///
+/// let novel = neophobia_modifier(0.0);
+/// let familiar = neophobia_modifier(0.9);
+/// assert!(novel > familiar);
+/// ```
 #[must_use]
 pub fn neophobia_modifier(familiarity: f32) -> f32 {
     let familiarity = familiarity.clamp(0.0, 1.0);
@@ -123,6 +140,14 @@ pub fn neophobia_modifier(familiarity: f32) -> f32 {
 /// - `environment_stability`: how stable the environment is (0.0-1.0)
 ///
 /// Returns reliability (0.0-1.0).
+///
+/// ```
+/// use jantu::memory::spatial_reliability;
+///
+/// let stable = spatial_reliability(0.8, 0.9);
+/// let volatile = spatial_reliability(0.8, 0.1);
+/// assert!(stable > volatile);
+/// ```
 #[must_use]
 pub fn spatial_reliability(memory_strength: f32, environment_stability: f32) -> f32 {
     let memory_strength = memory_strength.clamp(0.0, 1.0);

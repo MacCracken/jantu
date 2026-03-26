@@ -23,16 +23,37 @@ pub enum MigrationStrategy {
 }
 
 /// Season of the year (for driving migration triggers).
+///
+/// # Examples
+///
+/// ```
+/// use jantu::migration::{Season, season_from_day};
+///
+/// assert_eq!(season_from_day(100), Season::Spring);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum Season {
+    /// March–May (Northern Hemisphere convention).
     Spring,
+    /// June–August.
     Summer,
+    /// September–November.
     Autumn,
+    /// December–February.
     Winter,
 }
 
 /// Current phase of a migration cycle.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::migration::MigrationPhase;
+///
+/// let phase = MigrationPhase::EnRoute;
+/// assert_ne!(phase, MigrationPhase::Resident);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum MigrationPhase {
@@ -49,6 +70,15 @@ pub enum MigrationPhase {
 }
 
 /// Navigation method used during migration.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::migration::NavigationMethod;
+///
+/// let method = NavigationMethod::Magnetoreception;
+/// assert_ne!(method, NavigationMethod::Landmarks);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum NavigationMethod {
@@ -98,7 +128,7 @@ pub fn migratory_urge(
         MigrationStrategy::Sedentary => 0.0,
         MigrationStrategy::Obligate => {
             // Pure photoperiod response: peaks in autumn (day ~270) and spring (day ~90)
-            let phase = std::f32::consts::TAU * day_of_year as f32 / 365.0;
+            let phase = core::f32::consts::TAU * day_of_year as f32 / 365.0;
             // Two peaks per year (outbound and return)
             let seasonal = (2.0 * phase).cos().abs();
             seasonal * 0.8 + 0.2 // never fully zero for obligate
@@ -111,7 +141,7 @@ pub fn migratory_urge(
         }
         MigrationStrategy::Partial => {
             // Blend of obligate and facultative
-            let phase = std::f32::consts::TAU * day_of_year as f32 / 365.0;
+            let phase = core::f32::consts::TAU * day_of_year as f32 / 365.0;
             let seasonal = (2.0 * phase).cos().abs() * 0.4;
             let condition = (1.0 - food_availability) * 0.3 + (1.0 - temperature) * 0.3;
             (seasonal + condition).clamp(0.0, 1.0)
@@ -130,6 +160,14 @@ pub fn migratory_urge(
 /// - `headwind`: 0.0 = no wind, 1.0 = strong headwind (increases cost)
 ///
 /// Returns relative energy cost multiplier (1.0 = baseline).
+///
+/// ```
+/// use jantu::migration::migration_energy_cost;
+///
+/// let flying = migration_energy_cost(1.0, true, 0.0);
+/// let walking = migration_energy_cost(1.0, false, 0.0);
+/// assert!(flying < walking);
+/// ```
 #[must_use]
 pub fn migration_energy_cost(body_mass_kg: f32, flight_capable: bool, headwind: f32) -> f32 {
     if body_mass_kg <= 0.0 {
@@ -147,6 +185,13 @@ pub fn migration_energy_cost(body_mass_kg: f32, flight_capable: bool, headwind: 
 }
 
 /// Determine the current season from day of year.
+///
+/// ```
+/// use jantu::migration::{season_from_day, Season};
+///
+/// assert_eq!(season_from_day(200), Season::Summer);
+/// assert_eq!(season_from_day(300), Season::Autumn);
+/// ```
 #[must_use]
 pub fn season_from_day(day_of_year: u16) -> Season {
     match day_of_year % 365 {

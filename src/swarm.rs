@@ -1,14 +1,28 @@
 use serde::{Deserialize, Serialize};
 
 /// Swarm behavior type.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::swarm::SwarmBehavior;
+///
+/// let behavior = SwarmBehavior::Foraging;
+/// assert_ne!(behavior, SwarmBehavior::Defense);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum SwarmBehavior {
-    Foraging,    // pheromone trail following (ants)
-    Nesting,     // hive construction
-    Swarming,    // collective migration
-    Defense,     // coordinated defense response
-    Recruitment, // signaling others to a resource
+    /// Pheromone trail following (ants).
+    Foraging,
+    /// Hive construction.
+    Nesting,
+    /// Collective migration.
+    Swarming,
+    /// Coordinated defense response.
+    Defense,
+    /// Signaling others to a resource.
+    Recruitment,
 }
 
 /// Pheromone deposit (ant colony optimization).
@@ -22,24 +36,43 @@ pub enum SwarmBehavior {
 /// ```
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct Pheromone {
+    /// World-space position of the deposit.
     pub position: [f32; 3],
+    /// Current strength (0.0 = fully evaporated, 1.0 = fresh).
     pub strength: f32,
+    /// Chemical signal type.
     pub pheromone_type: PheromoneType,
 }
 
+/// Chemical signal type deposited by swarm members.
+///
+/// # Examples
+///
+/// ```
+/// use jantu::swarm::PheromoneType;
+///
+/// let kind = PheromoneType::Food;
+/// assert_ne!(kind, PheromoneType::Alarm);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum PheromoneType {
+    /// Marks a food source.
     Food,
+    /// Signals danger.
     Alarm,
+    /// General navigation path.
     Trail,
+    /// Marks the nest location.
     Home,
 }
 
 impl Pheromone {
+    /// Reduce strength by `rate`, floored at 0.0.
     pub fn evaporate(&mut self, rate: f32) {
         self.strength = (self.strength - rate).max(0.0);
     }
+    /// Whether this pheromone is still detectable (strength > 0.01).
     #[must_use]
     #[inline]
     pub fn is_detectable(&self) -> bool {

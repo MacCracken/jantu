@@ -1,6 +1,6 @@
 [package]
 name = "jantu"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2024"
 rust-version = "1.89"
 license = "GPL-3.0-only"
@@ -15,14 +15,14 @@ exclude = [".claude/", ".github/", "docs/", "scripts/"]
 
 [features]
 default = []
-logging = ["dep:tracing-subscriber"]
+std = []
+logging = ["std", "dep:tracing-subscriber"]
 personality = ["dep:bhava"]
 
 [dependencies]
-hisab = "1"
-serde = { version = "1", features = ["derive"] }
+serde = { version = "1", default-features = false, features = ["derive", "alloc"] }
 thiserror = "2"
-tracing = "0.1"
+tracing = { version = "0.1", default-features = false }
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"], optional = true }
 bhava = { version = "1", optional = true }
 
