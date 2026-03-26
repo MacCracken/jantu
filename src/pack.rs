@@ -13,6 +13,15 @@ pub enum HuntPhase {
 }
 
 /// Pack hunting success probability based on pack size and prey size ratio.
+///
+/// ```
+/// use jantu::pack::hunt_success_probability;
+///
+/// let small_pack = hunt_success_probability(2, 1.0);
+/// let large_pack = hunt_success_probability(8, 1.0);
+/// assert!(large_pack > small_pack);
+/// assert!(hunt_success_probability(100, 0.1) <= 0.95); // capped
+/// ```
 #[must_use]
 pub fn hunt_success_probability(pack_size: u32, prey_difficulty: f32) -> f32 {
     // Sigmoid: more pack members → higher success, but diminishing returns
@@ -21,6 +30,14 @@ pub fn hunt_success_probability(pack_size: u32, prey_difficulty: f32) -> f32 {
 }
 
 /// Food share based on dominance hierarchy.
+///
+/// ```
+/// use jantu::pack::food_share;
+///
+/// let alpha = food_share(0.9, 5);
+/// let omega = food_share(0.1, 5);
+/// assert!(alpha > omega);
+/// ```
 #[must_use]
 pub fn food_share(rank: f32, pack_size: u32) -> f32 {
     if pack_size == 0 {

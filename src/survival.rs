@@ -26,6 +26,18 @@ pub enum ThreatResponse {
 /// Select threat response based on creature traits.
 ///
 /// aggression (0-1), speed (0-1), size relative to threat (0-2, 1=equal), social_rank (0-1).
+///
+/// ```
+/// use jantu::survival::{ThreatResponse, select_threat_response};
+///
+/// // Fast, timid creature flees
+/// let response = select_threat_response(0.1, 0.9, 0.5, 0.5);
+/// assert_eq!(response, ThreatResponse::Flight);
+///
+/// // Aggressive, large creature fights
+/// let response = select_threat_response(0.9, 0.3, 1.5, 0.8);
+/// assert_eq!(response, ThreatResponse::Fight);
+/// ```
 #[must_use]
 pub fn select_threat_response(
     aggression: f32,

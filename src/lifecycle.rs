@@ -15,6 +15,14 @@ pub enum LifeStage {
 /// Metabolic rate relative to body mass (Kleiber's law).
 ///
 /// BMR ∝ M^0.75 (3/4 power law)
+///
+/// ```
+/// use jantu::lifecycle::basal_metabolic_rate;
+///
+/// let mouse = basal_metabolic_rate(0.02, 70.0);
+/// let human = basal_metabolic_rate(70.0, 70.0);
+/// assert!(human > mouse);
+/// ```
 #[must_use]
 #[inline]
 pub fn basal_metabolic_rate(body_mass_kg: f32, constant: f32) -> f32 {

@@ -23,6 +23,15 @@ pub enum ActivityPattern {
 }
 
 /// Circadian clock state for a creature.
+///
+/// ```
+/// use jantu::circadian::{CircadianClock, ActivityPattern};
+///
+/// let clock = CircadianClock::new(ActivityPattern::Diurnal);
+/// let noon = clock.activity_level(12.0);
+/// let midnight = clock.activity_level(0.0);
+/// assert!(noon > midnight);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CircadianClock {
     /// The creature's innate activity pattern.

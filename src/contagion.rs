@@ -60,6 +60,14 @@ impl Susceptibility {
 
 /// Compute the emotional influence one creature exerts on another.
 ///
+/// ```
+/// use jantu::contagion::emotional_influence;
+///
+/// let close = emotional_influence(0.8, 0.7, 5.0, 100.0);
+/// let far = emotional_influence(0.8, 0.7, 80.0, 100.0);
+/// assert!(close > far);
+/// ```
+///
 /// - `emitter_intensity`: how strongly the emitter is feeling the emotion (0.0-1.0)
 /// - `emitter_rank`: social rank of the emitter (0.0-1.0, higher = more influential)
 /// - `distance`: distance between the two creatures

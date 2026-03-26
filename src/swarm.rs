@@ -12,6 +12,14 @@ pub enum SwarmBehavior {
 }
 
 /// Pheromone deposit (ant colony optimization).
+///
+/// ```
+/// use jantu::swarm::{Pheromone, PheromoneType};
+///
+/// let mut p = Pheromone { position: [0.0; 3], strength: 1.0, pheromone_type: PheromoneType::Trail };
+/// p.evaporate(0.3);
+/// assert!((p.strength - 0.7).abs() < f32::EPSILON);
+/// ```
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct Pheromone {
     pub position: [f32; 3],
@@ -40,6 +48,13 @@ impl Pheromone {
 }
 
 /// Ant colony path selection probability (pheromone intensity / sum of all).
+///
+/// ```
+/// use jantu::swarm::path_selection_probability;
+///
+/// let prob = path_selection_probability(3.0, &[3.0, 7.0]);
+/// assert!((prob - 0.3).abs() < 0.01);
+/// ```
 #[must_use]
 pub fn path_selection_probability(path_pheromone: f32, all_pheromones: &[f32]) -> f32 {
     let total: f32 = all_pheromones.iter().sum();
@@ -50,6 +65,13 @@ pub fn path_selection_probability(path_pheromone: f32, all_pheromones: &[f32]) -
 }
 
 /// Quorum sensing: has the swarm reached critical mass for a decision?
+///
+/// ```
+/// use jantu::swarm::quorum_reached;
+///
+/// assert!(quorum_reached(7, 10, 0.6));
+/// assert!(!quorum_reached(4, 10, 0.6));
+/// ```
 #[must_use]
 pub fn quorum_reached(votes: u32, total: u32, threshold: f32) -> bool {
     if total == 0 {

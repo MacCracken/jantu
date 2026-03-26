@@ -73,6 +73,17 @@ impl FitnessTraits {
 
 /// Evaluate mate choice: will the chooser accept this candidate?
 ///
+/// ```
+/// use jantu::mating::{FitnessTraits, mate_acceptance};
+///
+/// let good = FitnessTraits {
+///     condition: 0.9, display_quality: 0.85,
+///     territory_quality: 0.8, genetic_quality: 0.7, vigor: 0.8,
+/// };
+/// let prob = mate_acceptance(&good, 0.3, 2);
+/// assert!(prob > 0.5);
+/// ```
+///
 /// - `candidate`: fitness traits of the potential mate
 /// - `chooser_threshold`: minimum attractiveness the chooser will accept (0.0-1.0)
 /// - `competition`: number of alternative candidates available (more choice → pickier)

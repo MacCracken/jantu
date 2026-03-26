@@ -76,6 +76,14 @@ impl Signal {
 ///
 /// Returns range as a multiplier of base detection distance.
 /// Different modalities travel different distances.
+///
+/// ```
+/// use jantu::signals::{SignalModality, signal_range};
+///
+/// let acoustic = signal_range(SignalModality::Acoustic, 0.8);
+/// let tactile = signal_range(SignalModality::Tactile, 0.8);
+/// assert!(acoustic > tactile);
+/// ```
 #[must_use]
 pub fn signal_range(modality: SignalModality, intensity: f32) -> f32 {
     let intensity = intensity.clamp(0.0, 1.0);

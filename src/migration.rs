@@ -66,6 +66,18 @@ pub enum NavigationMethod {
 
 /// Compute the migratory urge based on season and environmental conditions.
 ///
+/// ```
+/// use jantu::migration::{MigrationStrategy, migratory_urge};
+///
+/// // Sedentary creatures never migrate
+/// assert_eq!(migratory_urge(180, 0.5, 0.5, MigrationStrategy::Sedentary), 0.0);
+///
+/// // Bad conditions increase facultative urge
+/// let good = migratory_urge(180, 0.9, 0.8, MigrationStrategy::Facultative);
+/// let bad = migratory_urge(180, 0.1, 0.2, MigrationStrategy::Facultative);
+/// assert!(bad > good);
+/// ```
+///
 /// - `day_of_year`: 0-365, used to compute seasonal drive
 /// - `food_availability`: 0.0-1.0 (low food increases facultative urge)
 /// - `temperature`: relative temperature 0.0-1.0 (0=freezing, 1=warm)

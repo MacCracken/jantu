@@ -30,6 +30,18 @@ pub enum StressorType {
 }
 
 /// Stress state of a creature.
+///
+/// ```
+/// use jantu::stress::StressState;
+///
+/// let mut s = StressState::new();
+/// s.apply_stressor(0.8);
+/// assert!(s.acute > 0.0);
+/// assert!(s.behavioral_impact() > 0.0);
+///
+/// s.recover(10.0, 0.9);
+/// assert!(s.acute < 0.4);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StressState {
     /// Acute stress level (0.0-1.0). Fast-changing, represents immediate cortisol response.
@@ -118,6 +130,14 @@ impl Default for StressState {
 }
 
 /// Compute drive baseline shift due to chronic stress.
+///
+/// ```
+/// use jantu::stress::stress_drive_modifier;
+///
+/// // Chronic stress amplifies anxiety, suppresses luxury drives
+/// assert!(stress_drive_modifier(0.8, true) > 1.0);
+/// assert!(stress_drive_modifier(0.8, false) < 1.0);
+/// ```
 ///
 /// Chronic stress raises anxiety-related drives (fear, aggression) and
 /// suppresses luxury drives (curiosity, reproduction).

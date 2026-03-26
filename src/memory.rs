@@ -27,6 +27,15 @@ pub enum MemoryType {
 }
 
 /// A single memory trace.
+///
+/// ```
+/// use jantu::memory::{MemoryTrace, MemoryType};
+///
+/// let mut m = MemoryTrace::new(MemoryType::FoodSource, 0.8, 0.5);
+/// assert!(m.is_accessible());
+/// m.reinforce(0.4);
+/// assert_eq!(m.reinforcement_count, 2);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryTrace {
     /// What kind of thing is remembered.
@@ -125,6 +134,15 @@ pub fn spatial_reliability(memory_strength: f32, environment_stability: f32) -> 
 ///
 /// Repeated encounters strengthen recognition. Returns the expected recognition
 /// level after `encounters` meetings with decay `time_since_last` ticks ago.
+///
+/// ```
+/// use jantu::memory::social_recognition;
+///
+/// let recent = social_recognition(5, 0.0);
+/// let old = social_recognition(5, 100.0);
+/// assert!(recent > old);
+/// assert_eq!(social_recognition(0, 10.0), 0.0);
+/// ```
 #[must_use]
 pub fn social_recognition(encounters: u32, time_since_last: f32) -> f32 {
     if encounters == 0 {

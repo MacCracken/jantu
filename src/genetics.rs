@@ -7,6 +7,15 @@
 use serde::{Deserialize, Serialize};
 
 /// A heritable behavioral trait with genetic and environmental components.
+///
+/// ```
+/// use jantu::genetics::HeritableTrait;
+///
+/// let t = HeritableTrait::new(0.8, 0.6);
+/// // phenotype = genotype * heritability + environment * (1 - heritability)
+/// let phenotype = t.phenotype(0.2);
+/// assert!((phenotype - 0.56).abs() < 0.01);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HeritableTrait {
     /// Genotypic value (0.0-1.0). The genetic component.
@@ -71,11 +80,15 @@ impl BehavioralGenome {
 /// Compute offspring genotype from two parents via midparent blending
 /// with mutation.
 ///
-/// - `parent_a`: one parent's genotypic value
-/// - `parent_b`: other parent's genotypic value
-/// - `mutation`: random mutation offset (-1.0 to 1.0, typically small)
+/// ```
+/// use jantu::genetics::inherit_trait;
 ///
-/// Returns offspring genotypic value (0.0-1.0).
+/// let offspring = inherit_trait(0.8, 0.4, 0.0);
+/// assert!((offspring - 0.6).abs() < f32::EPSILON);
+///
+/// // Clamped to [0.0, 1.0]
+/// assert_eq!(inherit_trait(0.9, 0.9, 0.5), 1.0);
+/// ```
 #[must_use]
 pub fn inherit_trait(parent_a: f32, parent_b: f32, mutation: f32) -> f32 {
     let midparent = (parent_a + parent_b) * 0.5;

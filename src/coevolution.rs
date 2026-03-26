@@ -123,6 +123,16 @@ pub fn encounter_rate(predator_density: f32, prey_density: f32, search_efficienc
 
 /// Compute predator functional response (Holling Type II).
 ///
+/// ```
+/// use jantu::coevolution::functional_response_type2;
+///
+/// let rate = functional_response_type2(50.0, 0.5, 0.2);
+/// assert!(rate > 0.0);
+/// // At high prey density, consumption saturates at 1/handling_time
+/// let saturated = functional_response_type2(10000.0, 0.5, 0.2);
+/// assert!(saturated < 5.0 + f32::EPSILON);
+/// ```
+///
 /// Models the relationship between prey density and predator consumption rate,
 /// accounting for handling time.
 ///

@@ -1,6 +1,15 @@
 use serde::{Deserialize, Serialize};
 
 /// Territory marking strength (0.0 = unmarked, 1.0 = freshly marked).
+///
+/// ```
+/// use jantu::territory::TerritoryMark;
+///
+/// let mut mark = TerritoryMark { position: [0.0; 3], strength: 1.0, owner_id: 1 };
+/// assert!(mark.is_active());
+/// mark.decay(0.96);
+/// assert!(!mark.is_active());
+/// ```
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct TerritoryMark {
     pub position: [f32; 3],
@@ -23,6 +32,16 @@ impl TerritoryMark {
 }
 
 /// Territorial response when encountering another's territory.
+///
+/// Returns aggression modifier (>1.0 = more aggressive, <1.0 = retreat).
+///
+/// ```
+/// use jantu::territory::territorial_response;
+///
+/// let strong_owner = territorial_response(1.0, 0.3, 0.8);
+/// let weak_intruder = territorial_response(0.3, 1.0, 0.8);
+/// assert!(strong_owner > weak_intruder);
+/// ```
 #[must_use]
 pub fn territorial_response(own_strength: f32, intruder_strength: f32, aggression: f32) -> f32 {
     // Returns aggression modifier (>1.0 = more aggressive, <1.0 = retreat)

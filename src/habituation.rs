@@ -10,6 +10,20 @@
 use serde::{Deserialize, Serialize};
 
 /// Tracks habituation and sensitization state for a single stimulus channel.
+///
+/// ```
+/// use jantu::habituation::{StimulusResponse, HabituationParams};
+///
+/// let params = HabituationParams::default();
+/// let mut sr = StimulusResponse::new();
+/// assert!((sr.response_multiplier() - 1.0).abs() < f32::EPSILON);
+///
+/// // Repeated low-intensity exposure habituates
+/// for _ in 0..20 {
+///     sr.expose(0.1, &params);
+/// }
+/// assert!(sr.response_multiplier() < 0.5);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StimulusResponse {
     /// Habituation level (0.0 = no habituation, approaches `h_max`).
@@ -140,6 +154,14 @@ pub fn dishabituation_boost(intensity: f32, params: &HabituationParams) -> f32 {
 /// from a familiar stimulus to a similar one.
 ///
 /// `similarity` in [0.0, 1.0] where 1.0 = identical, 0.0 = completely different.
+///
+/// ```
+/// use jantu::habituation::generalized_habituation;
+///
+/// let identical = generalized_habituation(0.8, 1.0);
+/// let different = generalized_habituation(0.8, 0.2);
+/// assert!(identical > different);
+/// ```
 #[must_use]
 pub fn generalized_habituation(source_habituation: f32, similarity: f32) -> f32 {
     let similarity = similarity.clamp(0.0, 1.0);

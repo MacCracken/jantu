@@ -17,6 +17,14 @@ pub enum SocialRole {
 }
 
 /// Position in dominance hierarchy (0.0 = bottom, 1.0 = top).
+///
+/// ```
+/// use jantu::social::HierarchyPosition;
+///
+/// let alpha = HierarchyPosition::new(0.9);
+/// assert!(alpha.is_dominant());
+/// assert!(alpha.contest(&HierarchyPosition::new(0.4), 0.8, 0.8));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct HierarchyPosition(f32);
 
@@ -49,6 +57,13 @@ impl HierarchyPosition {
 }
 
 /// Group cohesion (0.0 = scattered, 1.0 = tight formation).
+///
+/// ```
+/// use jantu::social::group_cohesion;
+///
+/// let tight = group_cohesion(&[2.0, 3.0, 1.5], 100.0);
+/// assert!(tight > 0.9);
+/// ```
 #[must_use]
 pub fn group_cohesion(distances: &[f32], max_distance: f32) -> f32 {
     if distances.is_empty() || max_distance <= 0.0 {

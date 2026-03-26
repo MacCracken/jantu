@@ -1,6 +1,18 @@
 use serde::{Deserialize, Serialize};
 
 /// Drive level (0.0 = sated, 1.0 = critical need).
+///
+/// ```
+/// use jantu::instinct::DriveLevel;
+///
+/// let drive = DriveLevel::new(0.75);
+/// assert!(!drive.is_critical());
+/// assert!(!drive.is_sated());
+///
+/// // Values are clamped to [0.0, 1.0]
+/// let clamped = DriveLevel::new(1.5);
+/// assert_eq!(clamped.value(), 1.0);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct DriveLevel(f32);
 
@@ -49,6 +61,16 @@ pub enum InstinctType {
 }
 
 /// An active instinct with its current drive level.
+///
+/// ```
+/// use jantu::instinct::{Instinct, InstinctType, DriveLevel};
+///
+/// let mut fear = Instinct::new(InstinctType::Fear);
+/// fear.drive = DriveLevel::new(0.4);
+/// fear.update_priority();
+/// // Fear has a 2.0x multiplier, so priority = 0.4 * 2.0 = 0.8
+/// assert!((fear.priority - 0.8).abs() < f32::EPSILON);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Instinct {
     pub instinct_type: InstinctType,
@@ -83,6 +105,19 @@ impl Instinct {
 }
 
 /// Select the dominant instinct from a set (highest priority).
+///
+/// ```
+/// use jantu::instinct::{Instinct, InstinctType, DriveLevel, dominant_instinct};
+///
+/// let mut hunger = Instinct::new(InstinctType::Hunger);
+/// hunger.priority = 0.8;
+/// let mut rest = Instinct::new(InstinctType::Rest);
+/// rest.priority = 0.3;
+///
+/// let instincts = [hunger, rest];
+/// let dom = dominant_instinct(&instincts).unwrap();
+/// assert_eq!(dom.instinct_type, InstinctType::Hunger);
+/// ```
 #[must_use]
 pub fn dominant_instinct(instincts: &[Instinct]) -> Option<&Instinct> {
     instincts.iter().max_by(|a, b| {
