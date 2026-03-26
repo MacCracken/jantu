@@ -12,6 +12,16 @@ jantu (lib.rs)
 ├── swarm        — SwarmBehavior, Pheromone, PheromoneType, path/quorum functions
 ├── pack         — HuntPhase, hunt_success_probability(), food_share()
 ├── lifecycle    — LifeStage, Kleiber's law scaling (BMR, lifespan, heart rate)
+├── habituation  — StimulusResponse, HabituationParams, dual-process learning
+├── circadian    — CircadianClock, ActivityPattern, zeitgeber entrainment
+├── contagion    — EmotionalState, Susceptibility, group emotional dynamics
+├── migration    — MigrationStrategy, Season, migratory urge, energy costs
+├── mating       — FitnessTraits, MatingSystem, courtship, sexual selection
+├── coevolution  — TraitMatchup, predator-prey arms race, Holling Type II
+├── stress       — StressState, acute/chronic model, drive modifiers
+├── memory       — MemoryTrace, MemoryType, spatial/social recognition
+├── signals      — Signal, SignalModality, detection/response functions
+├── genetics     — BehavioralGenome, HeritableTrait, crossover, fitness
 └── logging      — [feature: logging] tracing-subscriber init
 ```
 
@@ -28,6 +38,11 @@ Typical consumer flow:
    - `select_threat_response()` → how should it react to danger?
    - `hunt_success_probability()` → should the pack attack?
    - `territorial_response()` → fight or retreat from intruder?
+   - `circadian::activity_level()` → how active should the creature be now?
+   - `contagion::emotional_influence()` → is fear spreading through the group?
+   - `stress::stress_drive_modifier()` → how is chronic stress shifting priorities?
+   - `memory::social_recognition()` → does the creature recognize this individual?
+   - `genetics::genome_fitness()` → how well-adapted is this creature?
 4. **Apply** decisions in the consumer's simulation loop
 
 ## Consumers

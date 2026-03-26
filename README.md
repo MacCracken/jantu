@@ -15,6 +15,16 @@ Provides instinct modeling, survival drives, territorial behavior, social hierar
 | `swarm` | Swarm behaviors, pheromone trails, path selection, quorum sensing |
 | `pack` | Pack hunting phases, success probability (sigmoid), rank-based food sharing |
 | `lifecycle` | Life stages, Kleiber's law metabolic scaling (BMR, lifespan, heart rate) |
+| `habituation` | Dual-process learning: habituation, sensitization, dishabituation, stimulus generalization |
+| `circadian` | Circadian rhythms: diurnal/nocturnal/crepuscular activity patterns, zeitgeber entrainment |
+| `contagion` | Emotional contagion: fear/aggression spreading through groups, susceptibility profiles |
+| `migration` | Seasonal migration: obligate/facultative/nomadic strategies, energy costs, navigation |
+| `mating` | Mate selection: fitness evaluation, courtship displays, sexual selection pressure |
+| `coevolution` | Predator-prey arms race: trait pressure, Red Queen dynamics, Holling Type II functional response |
+| `stress` | Stress accumulation: acute/chronic model, allostatic load, immune suppression |
+| `memory` | Spatial and social memory: reinforcement-protected forgetting, neophobia, recognition |
+| `signals` | Communication signals: modality-specific range, detection probability, honest signaling costs |
+| `genetics` | Heritable behavior: polygenic traits, phenotype expression, crossover, genome fitness |
 
 ## Usage
 

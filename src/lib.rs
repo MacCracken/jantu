@@ -20,11 +20,21 @@
 //! - `bhava::flow` → jantu predatory focus (hunting state)
 //! - `bhava::energy` → jantu foraging/resting cycles
 
+pub mod circadian;
+pub mod coevolution;
+pub mod contagion;
 pub mod error;
+pub mod genetics;
+pub mod habituation;
 pub mod instinct;
 pub mod lifecycle;
+pub mod mating;
+pub mod memory;
+pub mod migration;
 pub mod pack;
+pub mod signals;
 pub mod social;
+pub mod stress;
 pub mod survival;
 pub mod swarm;
 pub mod territory;
