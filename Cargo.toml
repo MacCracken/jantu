@@ -15,7 +15,7 @@ exclude = [".claude/", ".github/", "docs/", "scripts/"]
 
 [features]
 default = []
-std = []
+std = ["dep:hisab"]
 logging = ["std", "dep:tracing-subscriber"]
 personality = ["dep:bhava"]
 
@@ -23,6 +23,7 @@ personality = ["dep:bhava"]
 serde = { version = "1", default-features = false, features = ["derive", "alloc"] }
 thiserror = "2"
 tracing = { version = "0.1", default-features = false }
+hisab = { version = "1", optional = true }
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"], optional = true }
 bhava = { version = "1", optional = true }
 

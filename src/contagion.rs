@@ -5,7 +5,7 @@
 //! adapted for animal behavior (social facilitation, alarm spreading).
 //!
 //! Key dynamics:
-//! - Proximity increases transmission (inverse-square falloff)
+//! - Proximity increases transmission (quadratic falloff)
 //! - Social rank modulates influence (higher rank = more contagious)
 //! - Susceptibility varies by individual and state
 
@@ -106,7 +106,7 @@ pub fn emotional_influence(
     let emitter_intensity = emitter_intensity.clamp(0.0, 1.0);
     let emitter_rank = emitter_rank.clamp(0.0, 1.0);
 
-    // Inverse-square falloff with normalization
+    // Quadratic proximity falloff with normalization
     let normalized_dist = distance / max_range;
     let proximity = (1.0 - normalized_dist) * (1.0 - normalized_dist);
 

@@ -32,12 +32,20 @@ pub mod coevolution;
 pub mod contagion;
 /// Error types and result alias.
 pub mod error;
+/// Optimal foraging theory — prey selection, patch departure, and vigilance.
+pub mod foraging;
+/// Evolutionary game theory — contest strategies and stable equilibria.
+pub mod gametheory;
 /// Genetic trait inheritance — heritable behavior parameters.
 pub mod genetics;
 /// Learning through habituation and sensitization (dual-process theory).
 pub mod habituation;
 /// Core instinct system — drives, priorities, and dominant instinct selection.
 pub mod instinct;
+/// Kin selection and inclusive fitness (Hamilton 1964).
+pub mod kin;
+/// Landscape of fear — spatial risk perception and fear-mediated behavior.
+pub mod landscape;
 /// Allometric lifecycle scaling (Kleiber's law).
 pub mod lifecycle;
 /// Mate selection and courtship behaviors.
@@ -66,7 +74,7 @@ pub mod territory;
 pub mod logging;
 
 pub use error::{JantuError, Result};
-pub use instinct::{DriveLevel, Instinct, InstinctType};
+pub use instinct::{DriveLevel, Instinct, InstinctType, PriorityWeights};
 pub use social::{HierarchyPosition, SocialRole};
 pub use survival::{SurvivalState, ThreatResponse};
 pub use swarm::SwarmBehavior;

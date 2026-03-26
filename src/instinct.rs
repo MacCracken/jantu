@@ -101,6 +101,76 @@ pub enum InstinctType {
     Rest,
 }
 
+/// Species-specific priority multipliers for instinct types.
+///
+/// Default weights reflect general mammalian priorities:
+/// fear (2.0) > thirst (1.8) > hunger (1.5) > rest/social/nurturing (1.0)
+/// > reproduction (0.8) > aggression (0.7) > curiosity (0.5).
+///
+/// # Examples
+///
+/// ```
+/// use jantu::instinct::{PriorityWeights, InstinctType};
+///
+/// let w = PriorityWeights::default();
+/// assert!(w.for_type(InstinctType::Fear) > w.for_type(InstinctType::Hunger));
+/// ```
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PriorityWeights {
+    /// Fear priority multiplier (default 2.0).
+    pub fear: f32,
+    /// Hunger priority multiplier (default 1.5).
+    pub hunger: f32,
+    /// Thirst priority multiplier (default 1.8).
+    pub thirst: f32,
+    /// Aggression priority multiplier (default 0.7).
+    pub aggression: f32,
+    /// Reproduction priority multiplier (default 0.8).
+    pub reproduction: f32,
+    /// Nurturing priority multiplier (default 1.0).
+    pub nurturing: f32,
+    /// Curiosity priority multiplier (default 0.5).
+    pub curiosity: f32,
+    /// Social priority multiplier (default 1.0).
+    pub social: f32,
+    /// Rest priority multiplier (default 1.0).
+    pub rest: f32,
+}
+
+impl Default for PriorityWeights {
+    fn default() -> Self {
+        Self {
+            fear: 2.0,
+            hunger: 1.5,
+            thirst: 1.8,
+            aggression: 0.7,
+            reproduction: 0.8,
+            nurturing: 1.0,
+            curiosity: 0.5,
+            social: 1.0,
+            rest: 1.0,
+        }
+    }
+}
+
+impl PriorityWeights {
+    /// Look up the weight for an instinct type.
+    #[must_use]
+    pub fn for_type(&self, instinct_type: InstinctType) -> f32 {
+        match instinct_type {
+            InstinctType::Fear => self.fear,
+            InstinctType::Hunger => self.hunger,
+            InstinctType::Thirst => self.thirst,
+            InstinctType::Aggression => self.aggression,
+            InstinctType::Reproduction => self.reproduction,
+            InstinctType::Nurturing => self.nurturing,
+            InstinctType::Curiosity => self.curiosity,
+            InstinctType::Social => self.social,
+            InstinctType::Rest => self.rest,
+        }
+    }
+}
+
 /// An active instinct with its current drive level.
 ///
 /// ```
@@ -133,18 +203,28 @@ impl Instinct {
         }
     }
 
-    /// Update priority based on drive level and time since last satisfied.
+    /// Update priority using default weights.
+    ///
+    /// For species-specific tuning, use [`update_priority_with`](Self::update_priority_with).
     pub fn update_priority(&mut self) {
-        self.priority = self.drive.value()
-            * match self.instinct_type {
-                InstinctType::Fear => 2.0,   // fear overrides everything
-                InstinctType::Hunger => 1.5, // hunger is urgent
-                InstinctType::Thirst => 1.8, // thirst even more urgent
-                InstinctType::Rest => 1.0,
-                InstinctType::Reproduction => 0.8, // can wait
-                InstinctType::Curiosity => 0.5,    // lowest priority
-                _ => 1.0,
-            };
+        self.update_priority_with(&PriorityWeights::default());
+    }
+
+    /// Update priority using custom weights.
+    ///
+    /// ```
+    /// use jantu::instinct::{Instinct, InstinctType, DriveLevel, PriorityWeights};
+    ///
+    /// let mut hunger = Instinct::new(InstinctType::Hunger);
+    /// hunger.drive = DriveLevel::new(0.6);
+    ///
+    /// let mut weights = PriorityWeights::default();
+    /// weights.hunger = 3.0; // herbivore: hunger dominates
+    /// hunger.update_priority_with(&weights);
+    /// assert!(hunger.priority > 0.5);
+    /// ```
+    pub fn update_priority_with(&mut self, weights: &PriorityWeights) {
+        self.priority = self.drive.value() * weights.for_type(self.instinct_type);
         self.priority = self.priority.clamp(0.0, 1.0);
     }
 }

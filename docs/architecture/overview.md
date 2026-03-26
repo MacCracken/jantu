@@ -22,6 +22,10 @@ jantu (lib.rs)
 ├── memory       — MemoryTrace, MemoryType, spatial/social recognition
 ├── signals      — Signal, SignalModality, detection/response functions
 ├── genetics     — BehavioralGenome, HeritableTrait, crossover, fitness
+├── foraging     — Optimal diet, marginal value theorem, giving-up density, vigilance
+├── gametheory   — Hawk-dove ESS, bourgeois strategy, war of attrition, producer-scrounger
+├── kin          — Hamilton's rule, relatedness, inclusive fitness, alarm calling
+├── landscape    — Perceived risk, fear-foraging tradeoff, group dilution, habitat value
 └── logging      — [feature: logging] tracing-subscriber init
 ```
 

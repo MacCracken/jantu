@@ -95,13 +95,19 @@ impl StressState {
     pub fn recover(&mut self, dt: f32, safety: f32) {
         let safety = safety.clamp(0.0, 1.0);
 
-        // Acute stress decays quickly
-        let acute_decay = 0.1 * dt * (0.5 + safety * 0.5);
-        self.acute = (self.acute - acute_decay).max(0.0);
+        // Acute stress decays exponentially (cortisol half-life model)
+        let acute_rate = 0.1 * (0.5 + safety * 0.5);
+        self.acute *= (-acute_rate * dt).exp();
+        if self.acute < 1e-6 {
+            self.acute = 0.0;
+        }
 
         // Chronic stress decays very slowly, only in safe conditions
-        let chronic_decay = 0.005 * dt * safety * self.resilience;
-        self.chronic = (self.chronic - chronic_decay).max(0.0);
+        let chronic_rate = 0.005 * safety * self.resilience;
+        self.chronic *= (-chronic_rate * dt).exp();
+        if self.chronic < 1e-6 {
+            self.chronic = 0.0;
+        }
 
         // Resilience recovers slowly in safe, low-stress conditions
         let resilience_gain = 0.01 * dt * safety * (1.0 - self.acute);

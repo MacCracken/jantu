@@ -27,9 +27,36 @@ pub enum LifeStage {
     Deceased,
 }
 
+/// General allometric scaling: `constant * mass^exponent`.
+///
+/// All biological scaling relationships follow this form. Use specific
+/// convenience functions below for standard Kleiber exponents, or call
+/// this directly for taxa-specific scaling.
+///
+/// ```
+/// use jantu::lifecycle::allometric_scale;
+///
+/// // Kleiber BMR: constant=70, exponent=0.75
+/// let bmr = allometric_scale(40.0, 70.0, 0.75);
+/// assert!(bmr > 0.0);
+///
+/// // 2/3 scaling (surface-area law, some taxa)
+/// let bmr_23 = allometric_scale(40.0, 70.0, 0.667);
+/// assert!(bmr_23 < bmr);
+/// ```
+#[must_use]
+#[inline]
+pub fn allometric_scale(body_mass_kg: f32, constant: f32, exponent: f32) -> f32 {
+    if body_mass_kg <= 0.0 {
+        return 0.0;
+    }
+    constant * body_mass_kg.powf(exponent)
+}
+
 /// Metabolic rate relative to body mass (Kleiber's law).
 ///
-/// BMR ∝ M^0.75 (3/4 power law)
+/// BMR ∝ M^0.75 (3/4 power law). For taxa-specific exponents, use
+/// [`allometric_scale`] directly.
 ///
 /// ```
 /// use jantu::lifecycle::basal_metabolic_rate;
@@ -41,15 +68,13 @@ pub enum LifeStage {
 #[must_use]
 #[inline]
 pub fn basal_metabolic_rate(body_mass_kg: f32, constant: f32) -> f32 {
-    if body_mass_kg <= 0.0 {
-        return 0.0;
-    }
-    constant * body_mass_kg.powf(0.75)
+    allometric_scale(body_mass_kg, constant, 0.75)
 }
 
 /// Lifespan scaling (Kleiber): larger animals live longer.
 ///
-/// Lifespan ∝ M^0.25
+/// Lifespan ∝ M^0.25. For taxa-specific exponents, use
+/// [`allometric_scale`] directly.
 ///
 /// ```
 /// use jantu::lifecycle::estimated_lifespan_years;
@@ -61,15 +86,13 @@ pub fn basal_metabolic_rate(body_mass_kg: f32, constant: f32) -> f32 {
 #[must_use]
 #[inline]
 pub fn estimated_lifespan_years(body_mass_kg: f32, constant: f32) -> f32 {
-    if body_mass_kg <= 0.0 {
-        return 0.0;
-    }
-    constant * body_mass_kg.powf(0.25)
+    allometric_scale(body_mass_kg, constant, 0.25)
 }
 
 /// Heart rate scaling: smaller animals have faster hearts.
 ///
-/// HR ∝ M^(-0.25)
+/// HR ∝ M^(-0.25). For taxa-specific exponents, use
+/// [`allometric_scale`] directly.
 ///
 /// ```
 /// use jantu::lifecycle::heart_rate_bpm;
@@ -81,10 +104,7 @@ pub fn estimated_lifespan_years(body_mass_kg: f32, constant: f32) -> f32 {
 #[must_use]
 #[inline]
 pub fn heart_rate_bpm(body_mass_kg: f32, constant: f32) -> f32 {
-    if body_mass_kg <= 0.0 {
-        return 0.0;
-    }
-    constant * body_mass_kg.powf(-0.25)
+    allometric_scale(body_mass_kg, constant, -0.25)
 }
 
 #[cfg(test)]

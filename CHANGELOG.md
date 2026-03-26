@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **foraging** module: `PreyItem` profitability, `should_pursue()` optimal diet (MacArthur & Pianka 1966), `should_leave_patch()` marginal value theorem (Charnov 1976), `giving_up_density()` (Brown 1988), `vigilance_fraction()` with group dilution
+- **gametheory** module: `hawk_dove_ess()` ESS frequency (Maynard Smith & Price 1973), `hawk_dove_payoff()`, `bourgeois_payoff()` owner-intruder strategy, `war_of_attrition_duration()`, `producer_payoff()` frequency-dependent scrounging
+- **kin** module: `hamiltons_rule()` (Hamilton 1964), `Relatedness` constants (clone through first cousin + haplodiploid), `inclusive_fitness()`, `should_alarm_call()` with predation risk
+- **landscape** module: `perceived_risk()` spatial fear (Laundré 2001), `fear_foraging_efficiency()` state-dependent risk-taking, `group_dilution()` many-eyes/dilution effect, `net_habitat_value()` risk-adjusted quality
+- `allometric_scale()` general function for taxa-specific scaling exponents
+- `PriorityWeights` configurable struct replacing hardcoded instinct multipliers
+- `update_priority_with()` for species-specific instinct tuning
+- Re-added `hisab` as optional dependency behind `std` feature (easing, interpolation, spring dynamics)
+- Bhava integration: jantu is now an optional dependency of bhava 1.1.1 (`instinct` feature)
+
+### Changed
+
+- **stress**: acute decay changed from linear to exponential (cortisol half-life model)
+- **stress**: chronic decay changed from linear to exponential
+- **memory**: `forget()` changed from linear to exponential decay with reinforcement protection
+- **swarm**: `Pheromone::evaporate()` changed from subtractive to multiplicative decay
+
+### Fixed
+
+- **contagion**: corrected "inverse-square falloff" documentation to "quadratic proximity falloff"
+
+### Stats
+
+- 207 unit tests + 6 integration tests + 103 doc-tests = **316 tests passing**
+- 22 modules (up from 18)
+- 40 criterion benchmarks, all sub-50ns
+- Zero clippy warnings, zero `cargo audit` advisories
+- `wasm32-unknown-unknown` build verified
+
 ## [1.0.0] - 2026-03-26
 
 ### Added

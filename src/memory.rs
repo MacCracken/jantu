@@ -81,12 +81,16 @@ impl MemoryTrace {
 
     /// Apply forgetting over time.
     ///
-    /// Uses power-law decay: memories with more reinforcements decay slower.
+    /// Memories with more reinforcements decay slower (reinforcement protection
+    /// follows a hyperbolic curve: `1 / (1 + count * 0.2)`).
     pub fn forget(&mut self, dt: f32) {
-        // Base decay rate, reduced by reinforcement count (well-practiced memories persist)
+        // Reinforcement-protected exponential decay (well-practiced memories persist)
         let reinforcement_protection = 1.0 / (1.0 + self.reinforcement_count as f32 * 0.2);
-        let decay = 0.01 * dt * reinforcement_protection;
-        self.strength = (self.strength - decay).max(0.0);
+        let decay_rate = 0.01 * reinforcement_protection;
+        self.strength *= (-decay_rate * dt).exp();
+        if self.strength < 1e-6 {
+            self.strength = 0.0;
+        }
     }
 
     /// Whether this memory is still accessible (above recall threshold).

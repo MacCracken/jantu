@@ -31,8 +31,10 @@ pub enum SwarmBehavior {
 /// use jantu::swarm::{Pheromone, PheromoneType};
 ///
 /// let mut p = Pheromone { position: [0.0; 3], strength: 1.0, pheromone_type: PheromoneType::Trail };
-/// p.evaporate(0.3);
+/// p.evaporate(0.3); // 30% evaporates: 1.0 * (1.0 - 0.3) = 0.7
 /// assert!((p.strength - 0.7).abs() < f32::EPSILON);
+/// p.evaporate(0.3); // 0.7 * 0.7 = 0.49 — multiplicative decay
+/// assert!((p.strength - 0.49).abs() < 0.01);
 /// ```
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct Pheromone {
@@ -68,9 +70,11 @@ pub enum PheromoneType {
 }
 
 impl Pheromone {
-    /// Reduce strength by `rate`, floored at 0.0.
+    /// Multiplicative evaporation: `strength *= (1 - rate)`.
+    ///
+    /// `rate` is clamped to [0.0, 1.0]. A rate of 0.3 means 30% evaporates per step.
     pub fn evaporate(&mut self, rate: f32) {
-        self.strength = (self.strength - rate).max(0.0);
+        self.strength *= 1.0 - rate.clamp(0.0, 1.0);
     }
     /// Whether this pheromone is still detectable (strength > 0.01).
     #[must_use]
