@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.1.0]
+
+### Added
+- **bridge** — cross-crate primitive-value bridges for raasta (target direction, group arrival radius), vanaspati (canopy concealment, food foraging weight), badal (temperature to activity, precipitation to shelter urgency), garjan (locomotion to footstep params, threat to alarm intensity)
+- **integration/soorat** — feature-gated `soorat-compat` module with visualization data structures: `AgentField` (positions, headings, states), `TerritoryMap` (ownership regions), `MigrationPath` (waypoint sequences), `SocialGraph` (rank/relationship network), `SwarmField` (density/velocity grid from agent positions)
+
+### Updated
+- bhava 1.0.0 -> 1.2.0, hisab 1.1.0 -> 1.3.0, zerocopy 0.8.47 -> 0.8.48
+
+## [Unreleased-pre-1.1]
+
 ### Added
 
 - **foraging** module: `PreyItem` profitability, `should_pursue()` optimal diet (MacArthur & Pianka 1966), `should_leave_patch()` marginal value theorem (Charnov 1976), `giving_up_density()` (Brown 1988), `vigilance_fraction()` with group dilution

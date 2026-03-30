@@ -24,6 +24,8 @@
 #![warn(missing_docs)]
 extern crate alloc;
 
+/// Cross-crate bridges — primitive-value conversions from other AGNOS science crates.
+pub mod bridge;
 /// Circadian rhythm drive modifiers.
 pub mod circadian;
 /// Predator-prey co-evolution hooks.
@@ -42,6 +44,8 @@ pub mod genetics;
 pub mod habituation;
 /// Core instinct system — drives, priorities, and dominant instinct selection.
 pub mod instinct;
+/// Integration APIs for downstream consumers (soorat rendering).
+pub mod integration;
 /// Kin selection and inclusive fitness (Hamilton 1964).
 pub mod kin;
 /// Landscape of fear — spatial risk perception and fear-mediated behavior.
